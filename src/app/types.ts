@@ -14,3 +14,14 @@ export interface IGame {
     createdAt: string,
     updatedAt: string
 }
+
+export interface ICartGameItem {
+    id: number
+    uuid?: string
+    name: string
+    price: number
+    genre: string
+    picture: string
+    description: string
+    quantity: number
+}

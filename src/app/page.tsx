@@ -4,7 +4,7 @@ import HeroSect from "@/components/dashboard-template/hero-section";
 import RecommendedGames from "@/components/dashboard-template/recommended-games";
 import SpecialOffers from "@/components/dashboard-template/special-offers";
 import GameCategory from "@/components/dashboard-template/game-category";
-import GameList from "@/components/dashboard-template/game-list";
+import GameList from "@/app/cart/game-list";
 import Sponsor from "@/components/dashboard-template/sponsor";
 import FAQ from "@/components/dashboard-template/faq";
 import Footer from "@/components/dashboard-template/footer-component/footer";
