@@ -18,10 +18,13 @@ const SignInPage = () => {
     const [password, setPassword] = useState<string>("")
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const router = useRouter()
+    const [loading, setLoading] = useState(false);
 
     const handleRegister = async (e: FormEvent) => {
+        e.preventDefault()
+        setLoading(true);
+
         try {
-            e.preventDefault()
             const url = `${BASE_API_URL}/user/register`
             const payload = JSON.stringify({ username, email, password });
             const { data } = await axios.post(url, payload, {
@@ -29,15 +32,13 @@ const SignInPage = () => {
             })
             if (data.status == true) {
                 // toast(data.message, { hideProgressBar: true, containerId: `toastRegister`, type: "success", autoClose: 2000 })
-                storeCookie("token", data.token)
                 storeCookie("id", data.data.id)
                 storeCookie("username", data.data.username)
                 storeCookie("role", data.data.role)
+                storeCookie("token", data.token)
 
                 toast.success(data.message, { hideProgressBar: true, containerId: `toastRegister`, type: "success", autoClose: 2000 });
-                setTimeout(() => {
-                    router.replace("/");
-                }, 500);
+                router.replace("/");
             } else {
                 toast(data.message, { hideProgressBar: true, containerId: 'toastRegister', type: "warning" });
             }
@@ -114,8 +115,8 @@ const SignInPage = () => {
                                     <p className="bg-[#323644] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
                                         Continue with Google
                                     </p>
-                                    <button type="submit" className="bg-[#007AFF] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
-                                        Create Account
+                                    <button type="submit" disabled={loading} className="bg-[#007AFF] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
+                                        {loading ? "Loading..." : "Create Account"}
                                     </button>
                                 </div>
                             </form>

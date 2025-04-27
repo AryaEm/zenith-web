@@ -1,9 +1,7 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
 import { IGame } from "@/app/types"
-import { getCookie } from "@/lib/client-cookie"
+import { getCookies } from "@/lib/server-cookie"
 import { BASE_API_URL, BASE_IMAGE_GAME } from "../../../global"
 import { get } from "@/lib/api-bridge"
 import { AlertInfo } from "../alert"
@@ -11,7 +9,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const getGame = async (search: string): Promise<IGame[]> => {
     try {
-        const TOKEN = getCookie("token") || ""
+        const TOKEN = await getCookies("token") || ""
         const url = `${BASE_API_URL}/game/quick-access?search=${search}`
         const { data } = await get(url, TOKEN)
 

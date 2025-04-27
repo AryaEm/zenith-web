@@ -10,7 +10,7 @@ import { IoMdMail } from "react-icons/io";
 import { FaLock } from "react-icons/fa6";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
-import { FaUserNinja } from "react-icons/fa";
+// import { FaUserNinja } from "react-icons/fa";
 
 const LogInPage = () => {
     const [email, setEmail] = useState<string>("")
