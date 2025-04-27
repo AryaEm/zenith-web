@@ -1,4 +1,4 @@
-import ManagerTemplate from "@/components/managerTemplate"
+import ManagerTemplate from "@/components/dashboard-template"
 import MenuList from "../menuList"
 
 export const metadata = {
