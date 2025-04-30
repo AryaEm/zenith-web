@@ -21,9 +21,9 @@ const MenuList: IPropMenu[] = [
         label: `About`,
     },
     {
-        id: `support`,
-        path: `/admin/support`,
-        label: `Support`,
+        id: `cart`,
+        path: `/cart`,
+        label: `Cart`,
     },
 ]
 

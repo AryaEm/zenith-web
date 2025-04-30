@@ -19,7 +19,7 @@ export default function GameCard({ game }: { game: IGame }) {
         setIsLoggedIn(!!token)
     }, [])
 
-    const handleClick = () => {
+    const handleClick = (item:IGame) => {
         if (!isLoggedIn) {
             setShowModal(true)
             return
@@ -29,10 +29,10 @@ export default function GameCard({ game }: { game: IGame }) {
             id: game.id,
             uuid: game.uuid,
             name: game.name,
-            price: game.harga,
+            harga: game.harga,
             genre: game.genre,
-            picture: game.gambar,
-            description: game.deskripsi,
+            gambar: game.gambar,
+            deskripsi: game.deskripsi,
             quantity: 1,
         })
         router.push("/cart")
@@ -46,7 +46,7 @@ export default function GameCard({ game }: { game: IGame }) {
     return (
         <>
             <div
-                onClick={handleClick}
+                onClick={() => handleClick(game)}
                 className="w-full h-36 bg-white gamelistshadow bg-opacity-10 backdrop-blur-md rounded-xl flex items-center cursor-pointer border border-blue-500 sfprodisplay"
             >
                 <div className="w-1/4 h-full rounded-xl bg-[#007AFF]">

@@ -19,9 +19,9 @@ export interface ICartGameItem {
     id: number
     uuid?: string
     name: string
-    price: number
+    harga: number
     genre: string
-    picture: string
-    description: string
+    gambar: string
+    deskripsi: string
     quantity: number
 }

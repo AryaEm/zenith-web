@@ -11,14 +11,18 @@ export default function CartPage() {
     const { cart, removeFromCart, resetCart } = useCart()
     const router = useRouter()
 
+    const handleRemoveFromCart = (itemId: number) => {
+        removeFromCart(itemId);
+    };
+
     const getTotalPrice = () => {
-        return cart.reduce((total, item) => total + item.price * item.quantity, 0)
+        return cart.reduce((total, item) => total + item.harga * item.quantity, 0)
     }
 
     if (cart.length === 0) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#282828] text-white">
-                <Image src={emptCart} alt="Empty Cart" className="h-24 object-cover w-24 mb-4~~~"></Image>
+                <Image src={emptCart} alt="Empty Cart" className="h-24 object-cover w-24 mb-4"></Image>
                 <h1 className="text-3xl mb-4 font-semibold  ">Cart is Empty</h1>
                 <button
                     onClick={() => router.push("/")}
@@ -44,15 +48,15 @@ export default function CartPage() {
                     <h1 className="text-2xl font-bold mt-2">Your Cart</h1>
                 </div>
 
-                <div className="flex flex-col gap-5 ">
+                <div className="flex flex-col gap-5 w-11/12">
                     {cart.map((item) => (
                         <div
                             key={item.id}
-                            className="flex items-center justify-between cart-bg p-4 pr-6 rounded-lg shadow-md h-[80dvh] w-11/12 relative"
+                            className="flex items-center justify-between cart-bg p-4 pr-6 rounded-lg shadow-md h-[80dvh] w-full relative"
                         >
                             <div className="flex items-center gap-4">
                                 <Image
-                                    src={`${BASE_IMAGE_GAME}/${item.picture}`}
+                                    src={`${BASE_IMAGE_GAME}/${item.gambar}`}
                                     alt={item.name}
                                     width={400}
                                     height={300}
@@ -63,22 +67,22 @@ export default function CartPage() {
                                     <div className=" w-[70%]">
                                         <p className="text-2xl font-semibold">{item.name}</p>
                                         <p className="text-sm text-gray-400">{item.genre}</p>
-                                        <p className="text-sm text-gray-400 mt-2">{item.description}</p>
+                                        <p className="text-sm text-gray-400 mt-2">{item.deskripsi}</p>
                                     </div>
                                     <p className="mt-2 font-bold flex items-end">
-                                        {item.price === 0
+                                        {item.harga === 0
                                             ? "Free"
                                             : new Intl.NumberFormat("id-ID", {
                                                 style: "currency",
                                                 currency: "IDR",
-                                            }).format(item.price)}
+                                            }).format(item.harga)}
                                     </p>
                                 </div>
-                            </div>
+                            </div>  
                             <div className="flex flex-col items-end absolute -top-3 -right-3">
                                 {/* <p className="font-medium">Qty: {item.quantity}</p> */}
                                 <button
-                                    onClick={() => removeFromCart(item.id)}
+                                    onClick={() => handleRemoveFromCart(item.id)}
                                     className="bg-red-500 hover:bg-red-600 h-7 w-7 font-bold rounded-full text-sm transition-all"
                                 >
                                     X
