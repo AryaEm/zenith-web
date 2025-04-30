@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from "react"
 import { storeCookie, getCookie } from "@/lib/client-cookie"
 import { ICartGameItem } from "../types"
-import { toast } from "react-toastify"
+// import { toast } from "react-toastify"
 
 interface CartContextType {
     cart: ICartGameItem[]

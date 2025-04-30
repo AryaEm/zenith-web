@@ -33,7 +33,7 @@ export default async function RecommendedGames() {
             <div className="h-[95dvh] primary flex flex-col items-center sfprodisplay">
                 <div className="w-[45%] h-[10%] flex items-center flex-col my-4">
                     <p className="sfprodisplay text-white text-opacity-60 tracking-wide text-lg">Featured</p>
-                    <p className="sfprodisplay text-white text-2xl font-semibold tracking-wide">Recommended Games</p>
+                    <p className="sfprodisplay text-white text-2xl font-semibold tracking-wide">Latest game</p>
                 </div>
 
                 <div className="w-[65%] h-[70%] my-5 flex overflow-x-scroll rounded-xl scrollbar-hide">

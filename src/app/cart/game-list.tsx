@@ -3,12 +3,13 @@ import { getCookies } from "@/lib/server-cookie"
 import { BASE_API_URL } from "../../../global"
 import { get } from "@/lib/api-bridge"
 import { AlertInfo } from "../../components/alert"
-import GameCard from "./game-cart"
+import GameCard from "./game-card"
 import Link from "next/link"
 
 const getGame = async (search: string): Promise<IGame[]> => {
     try {
         const TOKEN = await getCookies("token") || ""
+        // const url = `${BASE_API_URL}/game?search=${search}`
         const url = `${BASE_API_URL}/game/quick-access?search=${search}`
         const { data } = await get(url, TOKEN)
         return data?.status ? data.data : []

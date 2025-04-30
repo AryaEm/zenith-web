@@ -5,7 +5,7 @@ import MenuItem from "./menu-item"
 import { IoSearchOutline } from "react-icons/io5";
 import Link from "next/link";
 import { removeCookie, getCookie } from "@/lib/client-cookie"
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 type MenuType = {
     id: string,
@@ -20,11 +20,11 @@ type ManagerProp = {
 }
 
 export default function Navbar({ children, menuList }: ManagerProp) {
-    const router = useRouter()
+    // const router = useRouter()
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        const token = getCookie("token"); 
+        const token = getCookie("token");
         setIsLoggedIn(!!token);
     }, []);
 
@@ -35,6 +35,7 @@ export default function Navbar({ children, menuList }: ManagerProp) {
         removeCookie("role")
         removeCookie("no_telp")
         removeCookie("profile_picture")
+        removeCookie("cart")
         setIsLoggedIn(false);
     };
 
