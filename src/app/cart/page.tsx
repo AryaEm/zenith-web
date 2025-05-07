@@ -6,6 +6,7 @@ import { BASE_IMAGE_GAME } from "../../../global"
 import { useRouter } from "next/navigation"
 import { IoIosArrowBack } from "react-icons/io";
 import emptCart from "../../../public/apaya/Untitled design (18).svg"
+import { IoCloseCircle } from "react-icons/io5";
 
 export default function CartPage() {
     const { cart, removeFromCart, resetCart } = useCart()
@@ -21,7 +22,7 @@ export default function CartPage() {
 
     if (cart.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-[#282828] text-white">
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#282A37] text-white">
                 <Image src={emptCart} alt="Empty Cart" className="h-24 object-cover w-24 mb-4"></Image>
                 <h1 className="text-3xl mb-4 font-semibold  ">Cart is Empty</h1>
                 <button
@@ -35,8 +36,8 @@ export default function CartPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#282828] text-white p-8 flex justify-center relative">
-            <div className="w-11/12 flex flex-col items-center">
+        <div className="min-h-screen bg-[#282A37] text-white py-8 pl-14 flex relative">
+            <div className="w-4/6 flex flex-col">
                 <div className="flex mb-8 gap-4 w-full">
 
                     <button
@@ -52,7 +53,7 @@ export default function CartPage() {
                     {cart.map((item) => (
                         <div
                             key={item.id}
-                            className="flex items-center justify-between cart-bg p-4 pr-6 rounded-lg shadow-md h-[80dvh] w-full relative"
+                            className="flex items-center justify-between bg-white gamelistshadow bg-opacity-10 backdrop-blur-md p-4 pr-6 rounded-lg shadow-md h-[80dvh] w-full relative"
                         >
                             <div className="flex items-center gap-4">
                                 <Image
@@ -78,7 +79,7 @@ export default function CartPage() {
                                             }).format(item.harga)}
                                     </p>
                                 </div>
-                            </div>  
+                            </div>
                             <div className="flex flex-col items-end absolute -top-3 -right-3">
                                 {/* <p className="font-medium">Qty: {item.quantity}</p> */}
                                 <button
@@ -93,10 +94,56 @@ export default function CartPage() {
                 </div>
             </div>
 
-            <div className="flex flex-col justify-between border border-[#202020] w-4/5 bg-[#646464] bg-opacity-50 backdrop-blur-xl rounded-lg h-[25dvh] fixed left-1/2 bottom-5 -translate-x-1/2">
+
+            <div className="flex flex-col border border-cyan-200 w-1/4 bg-white gamelistshadow bg-opacity-10 backdrop-blur-md rounded-3xl overflow-hidden h-[90vh] fixed right-14">
+                <div className="w-full mt-4 sfprodisplay tracking-wide text-xl px-8 py-2">Order Summary</div>
+                <div className="flex flex-col gap-5 w-full px-4 pt-3 h-[60vh] overflow-x-auto">
+                    {cart.map((item) => (
+                        <div
+                            key={item.id}
+                            className="flex items-center justify-between bg-white gamelistshadow bg-opacity-20 backdrop-blur-md pr-6 rounded-lg shadow-md h-28 w-full relative"
+                        >
+                            <div className="flex items-center gap-4 w-full">
+                                <Image
+                                    src={`${BASE_IMAGE_GAME}/${item.gambar}`}
+                                    alt={item.name}
+                                    width={150}
+                                    height={100}
+                                    className="rounded-lg object-cover h-28 w-28 object-right"
+                                    unoptimized
+                                />
+                                <div className="flex flex-col justify-between h-28 border border-blue-500 py-2 w-full">
+                                    <div className=" w-full">
+                                        <p className="text-xl font-semibold">{item.name}</p>
+                                        <p className="text-sm text-gray-200">{item.genre}</p>
+                                        {/* <p className="text-sm text-gray-400 mt-2">{item.deskripsi}</p> */}
+                                    </div>
+                                    <p className="mt-2 font-bold flex justify-end">
+                                        {item.harga === 0
+                                            ? "Free"
+                                            : new Intl.NumberFormat("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                            }).format(item.harga)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex flex-col items-end absolute -top-3 -right-3">
+                                {/* <p className="font-medium">Qty: {item.quantity}</p> */}
+                                <button
+                                    onClick={() => handleRemoveFromCart(item.id)}
+                                    className="h-7 w-7 font-bold rounded-full text-sm transition-all"
+                                >
+                                    <IoCloseCircle className="h-full w-full"/>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 <div>
                     <p></p>
-                    <p className="text-xl font-semibold p-6 border">
+                    <p className="text-xl font-semibold p-6 border-b">
                         Total: {getTotalPrice() === 0 ? "Free" : getTotalPrice().toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
                     </p>
                 </div>
