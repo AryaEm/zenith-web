@@ -18,11 +18,9 @@ const SignInPage = () => {
     const [password, setPassword] = useState<string>("")
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const router = useRouter()
-    const [loading, setLoading] = useState(false);
 
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault()
-        setLoading(true);
 
         try {
             const url = `${BASE_API_URL}/user/register`
@@ -115,8 +113,8 @@ const SignInPage = () => {
                                     <p className="bg-[#323644] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
                                         Continue with Google
                                     </p>
-                                    <button type="submit" disabled={loading} className="bg-[#007AFF] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
-                                        {loading ? "Loading..." : "Create Account"}
+                                    <button type="submit" className="bg-[#007AFF] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
+                                        "Create Account"
                                     </button>
                                 </div>
                             </form>

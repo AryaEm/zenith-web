@@ -1,167 +1,121 @@
-"use client"
+"use client";
 
-import { useCart } from "@/app/cart/cart-context"
-import Image from "next/image"
-import { BASE_IMAGE_GAME } from "../../../global"
-import { useRouter } from "next/navigation"
-import { IoIosArrowBack } from "react-icons/io";
+import { useCart } from "./cart-context";
+import Image from "next/image";
+import { BASE_IMAGE_GAME } from "../../../global";
+import { useRouter } from "next/navigation";
 import emptCart from "../../../public/apaya/Untitled design (18).svg"
+// import { IoIosArrowBack } from "react-icons/io";
 import { IoCloseCircle } from "react-icons/io5";
+import Link from "next/link";
 
 export default function CartPage() {
-    const { cart, removeFromCart, resetCart } = useCart()
-    const router = useRouter()
+  const { cart, removeFromCart, resetCart } = useCart();
+  const router = useRouter();
 
-    const handleRemoveFromCart = (itemId: number) => {
-        removeFromCart(itemId);
-    };
+  const handleRemoveFromCart = (itemId: number) => {
+    removeFromCart(itemId);
+  };
 
-    const getTotalPrice = () => {
-        return cart.reduce((total, item) => total + item.harga * item.quantity, 0)
-    }
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.harga * item.quantity, 0);
+  };
 
-    if (cart.length === 0) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-[#282A37] text-white">
-                <Image src={emptCart} alt="Empty Cart" className="h-24 object-cover w-24 mb-4"></Image>
-                <h1 className="text-3xl mb-4 font-semibold  ">Cart is Empty</h1>
-                <button
-                    onClick={() => router.push("/")}
-                    className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-full mt-4 transition-all"
-                >
-                    Back to Dashboard
-                </button>
-            </div>
-        )
-    }
+  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  if (cart.length === 0) {
     return (
-        <div className="min-h-screen bg-[#282A37] text-white py-8 pl-14 flex relative">
-            <div className="w-4/6 flex flex-col">
-                <div className="flex mb-8 gap-4 w-full">
+      <div className="flex flex-col items-center justify-center h-screen text-white primary">
+        <Image src={emptCart} alt="Empty Cart" width={300} height={300} />
+        <h1 className="text-2xl font-semibold mt-4">Cart is Empty</h1>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-500 rounded hover:bg-blue-600"
+          onClick={() => router.push("/")}
+        >
+          Back to Dashboard
+        </button>
+      </div>
+    );
+  }
 
-                    <button
-                        onClick={() => router.push("/")}
-                        className="bg-[#3c3c3c] hover:bg-opacity-50 h-8 w-8 mt-2 flex items-center justify-center rounded-full transition-all"
-                    >
-                        <IoIosArrowBack className="text-xl" />
-                    </button>
-                    <h1 className="text-2xl font-bold mt-2">Your Cart</h1>
+  return (
+    <div className="min-h-screen p-10 text-white cart-bg">
+      <Link href="/">
+        <h1 className="text-2xl font-bold mb-6">ZENITH / <span className="text-white/60">checkout</span></h1>
+      </Link>
+      <div className="flex gap-12 items-center justify-center h-[80vh] absolute w-[92%] left-1/2 -translate-x-1/2">
+        {/* Order Summary */}
+        <div className="w-1/2 ">
+          <h2 className="text-2xl sfprodisplay font-semibold mb-4">Order Summary</h2>
+          <div className="space-y-4">
+            {cart.map((item) => (
+              <div key={item.id} className="flex items-center h-[12vh] justify-between bg-[#212430] border rounded border-[#454757] relative">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src={`${BASE_IMAGE_GAME}/${item.gambar}`}
+                    alt={item.name}
+                    width={200}
+                    height={100}
+                    className="rounded-lg h-[12vh] object-cover relative -left-1"
+                  />
+                  <div>
+                    <p className="text-lg font-medium sfprodisplay">{item.name}</p>
+                    <p className="text-sm text-white/50">{item.genre}</p>
+                  </div>
                 </div>
-
-                <div className="flex flex-col gap-5 w-11/12">
-                    {cart.map((item) => (
-                        <div
-                            key={item.id}
-                            className="flex items-center justify-between bg-white gamelistshadow bg-opacity-10 backdrop-blur-md p-4 pr-6 rounded-lg shadow-md h-[80dvh] w-full relative"
-                        >
-                            <div className="flex items-center gap-4">
-                                <Image
-                                    src={`${BASE_IMAGE_GAME}/${item.gambar}`}
-                                    alt={item.name}
-                                    width={400}
-                                    height={300}
-                                    className="rounded-lg object-cover h-[25vh]"
-                                    unoptimized
-                                />
-                                <div className="flex justify-between h-[20vh]">
-                                    <div className=" w-[70%]">
-                                        <p className="text-2xl font-semibold">{item.name}</p>
-                                        <p className="text-sm text-gray-400">{item.genre}</p>
-                                        <p className="text-sm text-gray-400 mt-2">{item.deskripsi}</p>
-                                    </div>
-                                    <p className="mt-2 font-bold flex items-end">
-                                        {item.harga === 0
-                                            ? "Free"
-                                            : new Intl.NumberFormat("id-ID", {
-                                                style: "currency",
-                                                currency: "IDR",
-                                            }).format(item.harga)}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-end absolute -top-3 -right-3">
-                                {/* <p className="font-medium">Qty: {item.quantity}</p> */}
-                                <button
-                                    onClick={() => handleRemoveFromCart(item.id)}
-                                    className="bg-red-500 hover:bg-red-600 h-7 w-7 font-bold rounded-full text-sm transition-all"
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                <div className="flex items-center gap-4">
+                  <p className="text-lg text-zinc-200 font-normal mr-8">
+                    {item.harga > 0 ? `Rp ${item.harga.toLocaleString("id-ID")}` : "Free"}
+                  </p>
+                  <button onClick={() => handleRemoveFromCart(item.id)} className="absolute -right-2 -top-2">
+                    <IoCloseCircle className="text-2xl text-red-500 hover:text-red-700" />
+                  </button>
                 </div>
+              </div>
+            ))}
+            <div className="mt-4 p-4 bg-white/5 rounded-xl font-medium tracking-wide sfprodisplay text-zinc-400 custom-shadow1">
+              Quantity: {totalQuantity} item{totalQuantity > 1 && "s"}
             </div>
-
-
-            <div className="flex flex-col border border-cyan-200 w-1/4 bg-white gamelistshadow bg-opacity-10 backdrop-blur-md rounded-3xl overflow-hidden h-[90vh] fixed right-14">
-                <div className="w-full mt-4 sfprodisplay tracking-wide text-xl px-8 py-2">Order Summary</div>
-                <div className="flex flex-col gap-5 w-full px-4 pt-3 h-[60vh] overflow-x-auto">
-                    {cart.map((item) => (
-                        <div
-                            key={item.id}
-                            className="flex items-center justify-between bg-white gamelistshadow bg-opacity-20 backdrop-blur-md pr-6 rounded-lg shadow-md h-28 w-full relative"
-                        >
-                            <div className="flex items-center gap-4 w-full">
-                                <Image
-                                    src={`${BASE_IMAGE_GAME}/${item.gambar}`}
-                                    alt={item.name}
-                                    width={150}
-                                    height={100}
-                                    className="rounded-lg object-cover h-28 w-28 object-right"
-                                    unoptimized
-                                />
-                                <div className="flex flex-col justify-between h-28 border border-blue-500 py-2 w-full">
-                                    <div className=" w-full">
-                                        <p className="text-xl font-semibold">{item.name}</p>
-                                        <p className="text-sm text-gray-200">{item.genre}</p>
-                                        {/* <p className="text-sm text-gray-400 mt-2">{item.deskripsi}</p> */}
-                                    </div>
-                                    <p className="mt-2 font-bold flex justify-end">
-                                        {item.harga === 0
-                                            ? "Free"
-                                            : new Intl.NumberFormat("id-ID", {
-                                                style: "currency",
-                                                currency: "IDR",
-                                            }).format(item.harga)}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-end absolute -top-3 -right-3">
-                                {/* <p className="font-medium">Qty: {item.quantity}</p> */}
-                                <button
-                                    onClick={() => handleRemoveFromCart(item.id)}
-                                    className="h-7 w-7 font-bold rounded-full text-sm transition-all"
-                                >
-                                    <IoCloseCircle className="h-full w-full"/>
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div>
-                    <p></p>
-                    <p className="text-xl font-semibold p-6 border-b">
-                        Total: {getTotalPrice() === 0 ? "Free" : getTotalPrice().toLocaleString("id-ID", { style: "currency", currency: "IDR" })}
-                    </p>
-                </div>
-                <div className="flex gap-4 mt-4 border p-4">
-                    <button
-                        onClick={resetCart}
-                        className="bg-red-500 hover:bg-red-600 px-6 py-2 rounded-lg transition-all"
-                    >
-                        Clear Cart
-                    </button>
-                    <button
-                        onClick={() => alert("Checkout feature coming soon! ")}
-                        className="bg-green-500 hover:bg-green-600 px-6 py-2 rounded-lg transition-all"
-                    >
-                        Checkout
-                    </button>
-                </div>
-            </div>
+          </div>
         </div>
-    )
+
+        {/* Payment */}
+        <div className="w-1/2 ">
+          <h2 className="text-2xl sfprodisplay font-semibold mb-4">Payment</h2>
+          <div className="bg-[#212430] p-4 rounded-xl mb-4 custom-shadow1">
+            <p className="text-md sfprodisplay text-zinc-300 font-normal tracking-wide">nama customer</p>
+          </div>
+          <div className="space-y-4 p-6 rounded-xl bg-[#212430] custom-shadow1 sfprodisplay text-zinc-200 tracking-wide">
+            <div className="flex justify-between text-sm border-t border-white/10 pt-4">
+              <span>Subtotal:</span>
+              <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>
+            </div>
+            <div className="flex justify-between text-sm border-b border-white/10 pb-4">
+              <span>Total:</span>
+              <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className=" flex gap-3 items-center">
+                <label htmlFor="payment-method">Payment method:</label>
+                <select
+                  id="payment-method"
+                  className="px-3 py-1 bg-white/10 rounded text-white outline-none"
+                >
+                  <option value="qris" className="text-white font-medium bg-zinc-400">QRIS</option>
+                  <option value="gopay" className="text-white font-medium bg-zinc-400">GoPay</option>
+                  <option value="dana" className="text-white font-medium bg-zinc-400">DANA</option>
+                </select>
+              </div>
+              <button
+                onClick={() => alert("Coming Soon!")}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white"
+              >
+                Purchase
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
