@@ -4,10 +4,8 @@ import { ToastContainer } from "react-toastify"
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
-            {/* <CartProvider> */}
+            <ToastContainer containerId={"toastPurchase"}/>
             {children}
-            <ToastContainer />
-            {/* </CartProvider> */}
         </>
     )
 }

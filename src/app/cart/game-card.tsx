@@ -33,10 +33,11 @@ export default function GameCard({ game }: { game: IGame }) {
             return;
         }
 
-        if (ownedGameIds.includes(game.id)) {
+        if (game.isOwned) {
             alert("Game ini sudah kamu beli!");
             return;
         }
+
 
         const success = addToCart({
             id: game.id,
@@ -87,25 +88,32 @@ export default function GameCard({ game }: { game: IGame }) {
                         <p className="text-xl font-medium">{game.name}</p>
                         <p className="text-lg font-normal text-white text-opacity-50">{game.genre}</p>
                     </div>
-                    <div className="w-1/2 flex flex-col items-end justify-between">
-                        <p className="text-xl font-semibold text-white">
-                            {game.harga === 0
-                                ? "Free"
-                                : new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(game.harga)}
-                        </p>
-                        <p className="text-base text-white text-opacity-60">
-                            {new Date(game.tahun_rilis).toLocaleDateString("id-ID", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                            })}
-                        </p>
-                        <button
-                            onClick={handleAddToCart}
-                            className="mt-2 px-3 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm"
-                        >
-                            Add to Cart
-                        </button>
+                    <div className="w-1/2 flex flex-col items-end justify-start h-full pt-4 relative sfprodisplay">
+
+
+                        {(!isLoggedIn || !game.isOwned) && (
+                            <div>
+                                <p className="w-full text-lg font-semibold text-white">{game.harga > 0 ? `Rp ${game.harga.toLocaleString()}` : 'Gratis'}</p>
+                                <p className="w-full text-sm text-white text-opacity-60"> {new Date(game.tahun_rilis).toLocaleDateString('id-ID', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}</p>
+                            </div>
+                        )}
+
+                        {isLoggedIn ? (
+
+                            game.isOwned ? (
+                                <button className="mt-2 px-8 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-md font-medium tracking-wide absolute bottom-4">Play</button>
+                            ) : (
+                                <button className="mt-2 px-3 py-1 rounded border-2 border-blue-500 hover:border-blue-600 transition-all duration-300 text-white text-md font-medium absolute bottom-4" onClick={handleAddToCart}>Add to Cart</button>
+                            )
+                        ) : (
+                            <button className="cursor-not-allowed mt-2 px-3 py-1 rounded bg-red-500 hover:bg-red-600 transition-all duration-300 text-white text-md font-medium absolute bottom-4" disabled>LogIn untuk membeli</button>
+                        )}
+
+
                     </div>
                 </div>
             </div>

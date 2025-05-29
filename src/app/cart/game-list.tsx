@@ -6,10 +6,9 @@ import { AlertInfo } from "../../components/alert"
 import GameCard from "./game-card"
 import Link from "next/link"
 
-const getGame = async (search: string): Promise<IGame[]> => {
+const getGameLogin = async (search: string): Promise<IGame[]> => {
     try {
         const TOKEN = await getCookies("token") || ""
-        // const url = `${BASE_API_URL}/game?search=${search}`
         const url = `${BASE_API_URL}/game/games?search=${search}`
         const { data } = await get(url, TOKEN)
         return data?.status ? data.data : []
@@ -19,8 +18,24 @@ const getGame = async (search: string): Promise<IGame[]> => {
     }
 }
 
+const getGame = async (search: string): Promise<IGame[]> => {
+    try {
+        const TOKEN = await getCookies("token") || ""
+        const url = `${BASE_API_URL}/game?search=${search}`
+        const { data } = await get(url, TOKEN)
+        return data?.status ? data.data : []
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+}
+
 export default async function GameList() {
-    const games = await getGame("")
+    const token = await getCookies("token")
+    const games = token ? await getGameLogin("") : await getGame("")
+
+    // const gamesLogin = await getGameLogin("")
+    // const games = await getGame("")
 
     if (games.length === 0) {
         return <AlertInfo title="Informasi">No data Available</AlertInfo>

@@ -144,7 +144,7 @@ export default function CartPage() {
                     alt={item.name}
                     width={200}
                     height={100}
-                    className="rounded-lg h-full object-cover"
+                    className="rounded-lg h-[14vh] object-cover"
                   />
                   <div>
                     <p className="text-lg font-medium sfprodisplay">{item.name}</p>
@@ -188,7 +188,7 @@ export default function CartPage() {
                   onChange={e => setPaymentMethod(e.target.value)}
                 >
                   <option value="QRIS">QRIS</option>
-                  <option value="GoPay">GoPay</option>
+                  <option value="GOPAY">GoPay</option>
                   <option value="DANA">DANA</option>
                 </select>
               </div>

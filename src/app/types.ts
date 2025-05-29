@@ -9,10 +9,16 @@ export interface IGame {
     deskripsi: string,
     total_dibeli: number,
     genre: string,
+    isOwned?: boolean,
     tahun_rilis: string,
     download_link: string,
     createdAt: string,
     updatedAt: string
+}
+
+interface GameCardProps {
+    game: IGame
+    isLoggedIn: boolean
 }
 
 export interface ICartGameItem {

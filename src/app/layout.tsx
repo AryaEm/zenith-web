@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "./cart/cart-context"
+// import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Zenith",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           {children}
+            {/* <ToastContainer /> */}
         </CartProvider>
       </body>
     </html>
