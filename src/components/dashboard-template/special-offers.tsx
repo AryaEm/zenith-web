@@ -8,20 +8,24 @@ import { AlertInfo } from "../alert";
 const getMostPurchasedGames = async (): Promise<IGame[]> => {
     try {
         const TOKEN = await getCookies("token");
-        console.log("Token:", TOKEN);  
-        const url = `${BASE_API_URL}/game/mostpurchased`;  
-        const { data } = await get(url, TOKEN);
+        console.log("Token:", TOKEN);
+        const url = `${BASE_API_URL}/game/mostpurchased`;
 
-        // console.log("Response API:", data); // Tambahkan log ini untuk melihat data yang dikembalikan
+        // Tambahkan generic <IGame[]> di sini
+        const { status, data } = await get<IGame[]>(url, TOKEN);
 
-        let result: IGame[] = [];
-        if (data?.status) result = [...data.data];
-        return result;
+        // Kalau status true dan data ada, return data, kalau tidak return array kosong
+        if (status && data) {
+            return data;
+        }
+
+        return [];
     } catch (error) {
         console.log(error);
         return [];
-    } 
-}; 
+    }
+};
+
 
 export default async function SpecialOffers() {
     const games: IGame[] = await getMostPurchasedGames();
@@ -42,7 +46,7 @@ export default async function SpecialOffers() {
         }
         return text;
     };
-    
+
 
     return (
         <main className="blue-bg w-full h-[80dvh] sfprodisplay">

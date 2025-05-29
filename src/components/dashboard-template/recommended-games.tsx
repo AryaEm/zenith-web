@@ -9,18 +9,18 @@ import ClientGameCard from "./client-recomentgames"
 
 async function getRecommendedGames(): Promise<IGame[]> {
     try {
-        const TOKEN = await getCookies("token")
-        const url = `${BASE_API_URL}/game/?latest=true`
-        const { data } = await get(url, TOKEN)
+        const TOKEN = await getCookies("token");
+        const url = `${BASE_API_URL}/game/?latest=true`;
 
-        let result: IGame[] = []
-        if (data?.status) result = [...data.data]
-        return result
+        // Tambahkan generic <IGame[]>
+        const { status, data } = await get<IGame[]>(url, TOKEN);
+        return status && data ? data : [];
     } catch (error) {
-        console.error(error)
-        return []
+        console.error(error);
+        return [];
     }
 }
+
 
 export default async function RecommendedGames() {
     const games = await getRecommendedGames()

@@ -1,52 +1,26 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestHeaders } from "axios";
 import { BASE_API_URL } from "../../global";
 
 const axiosInstance = axios.create({
-    baseURL: BASE_API_URL
-})
+    baseURL: BASE_API_URL,
+});
 
-export const get = async (url: string, token: string) => {
-    try {
-        const headers: any = {
-            "Authorization": `Bearer ${token}` || '',
-        }
-        const result = await axiosInstance.get(url, {
-            headers
-        })
-
-
-        return {
-            status: true,
-            data: result.data
-        }
-    } catch (error) {
-        const err = error as AxiosError<{ message: string, code: number }>
-        if (err.response) {
-            console.log(err.response.data.message);
-            return {
-                status: false,
-                message: `${err.code}: something wrong`
-            }
-        }
-        console.log(err.response);
-        return {
-            status: false,
-            message: `Something were wrong: ${error}`
-        }
-    }
+// Di atas file api-bridge.ts
+export interface ApiResponse<T> {
+    status: boolean;
+    data?: T;
+    message?: string;
 }
 
-export const post = async (url: string, data: any, token: string) => {
+
+// GET
+export const get = async <T = unknown>(url: string, token?: string): Promise<ApiResponse<T>> => {
     try {
-        const isJSON = !(data instanceof FormData);
-        const headers: any = {
-            Authorization: `Bearer ${token}`,
-            ...(isJSON && { "Content-Type": "application/json" }),
+        const headers: Record<string, string> = {
+            ...(token && { Authorization: `Bearer ${token}` }),
         };
 
-        const body = isJSON ? JSON.stringify(data) : data;
-
-        const result = await axiosInstance.post(url, body, { headers });
+        const result = await axiosInstance.get<T>(url, { headers });
 
         return {
             status: true,
@@ -54,75 +28,101 @@ export const post = async (url: string, data: any, token: string) => {
         };
     } catch (error) {
         const err = error as AxiosError<{ message: string; code: number }>;
-        if (err.response) {
-            return {
-                status: false,
-                message: `${err.response.data.message}`,
-            };
-        }
         return {
             status: false,
-            message: `Something went wrong`,
+            message: err.response?.data.message || "Something went wrong",
         };
     }
 };
 
 
-export const put = async (url: string, data: string | FormData, token: string) => {
+// POST
+export const post = async <T = unknown>(
+    url: string,
+    data: unknown,
+    token?: string
+): Promise<ApiResponse<T>> => {
     try {
-        const type: string = (typeof data == 'string') ? "application/json" : "multipart/form-data"
-        const result = await axiosInstance.put(url, data, {
-            headers: {
-                "Authorization": `Bearer ${token}` || '',
-                "Content-Type": type
-            }
-        })
+        const isJSON = !(data instanceof FormData);
+
+        const headers: Record<string, string> = {
+            Authorization: `Bearer ${token}`,
+            ...(isJSON && { "Content-Type": "application/json" }),
+        };
+
+
+        const body = isJSON ? JSON.stringify(data) : data;
+
+        const result = await axiosInstance.post<T>(url, body, { headers });
+
         return {
             status: true,
-            data: result.data
-        }
+            data: result.data,
+        };
     } catch (error) {
-        const err = error as AxiosError<{ message: string, code: number }>
-        if (err.response) {
-            console.log(err.response.data.message);
-            return {
-                status: false,
-                message: `${err.code}: something wrong`
-            }
-        }
-        console.log(err.response);
+        const err = error as AxiosError<{ message: string }>;
+        const message = err.response?.data.message ?? "Unknown error";
         return {
             status: false,
-            message: `Something were wrong`
-        }
+            message,
+        };
     }
-}
+};
 
-export const drop = async (url: string, token: string) => {
+// PUT
+export const put = async <T = unknown>(
+    url: string,
+    data: unknown,
+    token?: string
+): Promise<ApiResponse<T>> => {
     try {
-        const result = await axiosInstance.delete(url, {
-            headers: {
-                "Authorization": `Bearer ${token}` || '',
-            }
-        })
+        const isJSON = !(data instanceof FormData);
+
+        const headers: Record<string, string> = {
+            Authorization: `Bearer ${token}`,
+            ...(isJSON && { "Content-Type": "application/json" }),
+        };
+
+
+        const body = isJSON ? JSON.stringify(data) : data;
+
+        const result = await axiosInstance.put<T>(url, body, { headers });
+
         return {
             status: true,
-            data: result.data
-        }
+            data: result.data,
+        };
     } catch (error) {
-        const err = error as AxiosError<{ message: string, code: number }>
-        if (err.response) {
-            console.log(err.response.data.message);
-            return {
-                status: false,
-                message: `${err.code}: something wrong`
-            }
-        }
-        console.log(err.response);
+        const err = error as AxiosError<{ message: string }>;
+        const message = err.response?.data.message ?? "Unknown error";
         return {
             status: false,
-            message: `Something were wrong`
-        }
+            message,
+        };
     }
-}
+};
 
+// DELETE
+export const drop = async <T = unknown>(
+    url: string,
+    token?: string
+): Promise<ApiResponse<T>> => {
+    try {
+        const headers: Record<string, string> = {};
+        if (token) headers.Authorization = `Bearer ${token}`;
+
+        const result = await axiosInstance.delete<T>(url, { headers });
+
+        return {
+            status: true,
+            data: result.data,
+        };
+    } catch (error) {
+        const err = error as AxiosError<{ message: string }>;
+        const message = err.response?.data.message ?? "Unknown error";
+        return {
+            status: false,
+            message,
+        };
+    }
+};
