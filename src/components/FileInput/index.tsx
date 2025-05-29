@@ -4,16 +4,16 @@ import React from "react";
 // import { useState } from "react";
 // import { AlertWarning } from "../alert";
 
-type Props = {
-    disabled?: boolean,
-    acceptTypes: string[],
-    onChange: (file: File | null) => void,
-    className?: string,
-    required: boolean,
-    id?: string,
-    label?: string,
-    maxSize?: number
-}
+// type Props = {
+//     disabled?: boolean,
+//     acceptTypes: string[],
+//     onChange: (file: File | null) => void,
+//     className?: string,
+//     required: boolean,
+//     id?: string,
+//     label?: string,
+//     maxSize?: number
+// }
 
 const FileInput = () => {
     // const [message, setMessage] = useState("")
