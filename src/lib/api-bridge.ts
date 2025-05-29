@@ -1,39 +1,41 @@
-import axios, { AxiosError, AxiosRequestHeaders } from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_API_URL } from "../../global";
 
 const axiosInstance = axios.create({
     baseURL: BASE_API_URL,
 });
 
-// Di atas file api-bridge.ts
 export interface ApiResponse<T> {
     status: boolean;
-    data?: T;
+    data: T;
     message?: string;
 }
 
-
-// GET
-export const get = async <T = unknown>(url: string, token?: string): Promise<ApiResponse<T>> => {
+export const get = async <T>(url: string, token?: string): Promise<ApiResponse<T>> => {
     try {
-        const headers: Record<string, string> = {
-            ...(token && { Authorization: `Bearer ${token}` }),
-        };
+        const headers: Record<string, string> = {};
+        if (token) headers["Authorization"] = `Bearer ${token}`;
 
-        const result = await axiosInstance.get<T>(url, { headers });
+        const response = await axiosInstance.get(url, { headers });
 
         return {
             status: true,
-            data: result.data,
+            data: response.data?.data ?? [],
         };
     } catch (error) {
-        const err = error as AxiosError<{ message: string; code: number }>;
+        const err = error as AxiosError<any>;
+        const errorMessage = err.response?.data?.message || "Unknown error";
+
         return {
             status: false,
-            message: err.response?.data.message || "Something went wrong",
+            data: [] as T,
+            message: errorMessage,
         };
     }
 };
+
+
+
 
 
 // POST
@@ -64,7 +66,8 @@ export const post = async <T = unknown>(
         const message = err.response?.data.message ?? "Unknown error";
         return {
             status: false,
-            message,
+            data: [] as T,
+            message: message,
         };
     }
 };
@@ -97,7 +100,8 @@ export const put = async <T = unknown>(
         const message = err.response?.data.message ?? "Unknown error";
         return {
             status: false,
-            message,
+            data: [] as T,
+            message: message,
         };
     }
 };
@@ -122,7 +126,8 @@ export const drop = async <T = unknown>(
         const message = err.response?.data.message ?? "Unknown error";
         return {
             status: false,
-            message,
+            data: [] as T,
+            message: message,
         };
     }
 };

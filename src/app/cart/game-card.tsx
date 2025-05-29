@@ -79,8 +79,8 @@ export default function GameCard({ game }: { game: IGame }) {
                         unoptimized
                     />
                 </div>
-                <div className="flex w-3/4 h-full px-5 justify-between items-center">
-                    <div className="w-1/2 flex flex-col text-white">
+                <div className="flex w-3/4 h-full px-5 justify-between items-center ">
+                    <div className="w-1/2 flex flex-col text-white h-full py-6">
                         <p className="text-xl font-medium">{game.name}</p>
                         <p className="text-lg font-normal text-white text-opacity-50">{game.genre}</p>
                     </div>

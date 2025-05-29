@@ -37,9 +37,13 @@ export default async function GameList() {
     // const gamesLogin = await getGameLogin("")
     // const games = await getGame("")
 
-    if (games.length === 0) {
+    console.log("Games:", games, "Type:", typeof games, "IsArray:", Array.isArray(games));
+
+
+    if (!Array.isArray(games) || games.length === 0) {
         return <AlertInfo title="Informasi">No data Available</AlertInfo>
     }
+
 
     return (
         <div className="h-fit w-full flex justify-center primary">
