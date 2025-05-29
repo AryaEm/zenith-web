@@ -115,7 +115,7 @@ const SignInPage = () => {
                                         Continue with Google
                                     </p>
                                     <button type="submit" className="bg-[#007AFF] hover:bg-primary w-1/2 p-3 font-medium rounded-md text-white">
-                                        "Create Account"
+                                        Create Account
                                     </button>
                                 </div>
                             </form>

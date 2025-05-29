@@ -19,7 +19,7 @@ export default function CartPage() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("QRIS");
-  const [loadingPurchase, setLoadingPurchase] = useState(false);
+  const [, setLoadingPurchase] = useState(false);
 
   useEffect(() => {
     // Ambil user hanya sekali, bukan tiap render

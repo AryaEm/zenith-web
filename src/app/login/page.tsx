@@ -10,6 +10,7 @@ import { IoMdMail } from "react-icons/io";
 import { FaLock } from "react-icons/fa6";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
+import Link from "next/link"
 // import { FaUserNinja } from "react-icons/fa";
 
 const LogInPage = () => {
@@ -67,7 +68,7 @@ const LogInPage = () => {
                                 <h4 className="text-3xl font-semibold text-white mb-2 sfprodisplay tracking-wider">Welcome Back<span className="text-[#007AFF]">.</span></h4>
                                 <span className="text-sm text-white text-opacity-70 font-normal text-center">
                                     <span className="text-sm text-white text-opacity-70 flex gap-1 font-normal text-center">
-                                        Don&apos;t have an account? <p className="font-bold cursor-pointer text-[#007AFF]">SignUp</p>
+                                        Don&apos;t have an account? <Link href={"/signin"}><p className="font-bold cursor-pointer text-[#007AFF]">SignUp</p></Link>
                                     </span>
                                 </span>
                             </div>

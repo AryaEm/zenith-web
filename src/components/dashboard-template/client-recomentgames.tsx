@@ -5,7 +5,6 @@ import { useState, useEffect } from "react"
 import { BASE_IMAGE_GAME } from "../../../global"
 import { AddToCartBtn } from "../button"
 import { IGame } from "@/app/types"
-import Link from "next/link"
 
 interface Props {
     game: IGame
@@ -14,7 +13,7 @@ interface Props {
 
 export default function ClientGameCard({ game }: Props) {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [showModal, setShowModal] = useState(false)
+    const [, setShowModal] = useState(false)
 
     useEffect(() => {
         // Cek token dari cookie browser (client-side)

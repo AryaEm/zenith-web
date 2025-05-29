@@ -7,10 +7,10 @@ const axiosInstance = axios.create({
 
 export const get = async (url: string, token: string) => {
     try {
-        let headers: any = {
+        const headers: any = {
             "Authorization": `Bearer ${token}` || '',
         }
-        let result = await axiosInstance.get(url, {
+        const result = await axiosInstance.get(url, {
             headers
         })
 
@@ -71,7 +71,7 @@ export const post = async (url: string, data: any, token: string) => {
 export const put = async (url: string, data: string | FormData, token: string) => {
     try {
         const type: string = (typeof data == 'string') ? "application/json" : "multipart/form-data"
-        let result = await axiosInstance.put(url, data, {
+        const result = await axiosInstance.put(url, data, {
             headers: {
                 "Authorization": `Bearer ${token}` || '',
                 "Content-Type": type
@@ -100,7 +100,7 @@ export const put = async (url: string, data: string | FormData, token: string) =
 
 export const drop = async (url: string, token: string) => {
     try {
-        let result = await axiosInstance.delete(url, {
+        const result = await axiosInstance.delete(url, {
             headers: {
                 "Authorization": `Bearer ${token}` || '',
             }

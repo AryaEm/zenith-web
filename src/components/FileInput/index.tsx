@@ -17,25 +17,25 @@ type Props = {
 
 const FileInput = (props: Props) => {
     const [message, setMessage] = useState("")
-    const limitSize = props.maxSize || 2048
+    // const limitSize = props.maxSize || 2048
     const acceptTypes = props.acceptTypes.join()
     const handleFileInput = (event: React.ChangeEvent, callback: (data: File | null) => void): void => {
         const target = event.target as HTMLInputElement
-        let currentFile: File = (target.files as FileList)[0]
+        // let currentFile: File = (target.files as FileList)[0]
         setMessage("")
-        if (!props.acceptTypes.includes(currentFile.type)) {
-            target.value = ""
-            setMessage(`'${currentFile.type}' is invalid file type. The allow file type are ${acceptTypes}`)
-            callback(null)
-            return;
-        }
-        if (currentFile.size > (2 * 1024 * 1024)) {
-            target.value = ""
-            setMessage(`Your file is oversize`)
-            callback(null)
-            return;
-        }
-        callback(currentFile)
+        // if (!props.acceptTypes.includes(currentFile.type)) {
+        //     target.value = ""
+        //     setMessage(`'${currentFile.type}' is invalid file type. The allow file type are ${acceptTypes}`)
+        //     callback(null)
+        //     return;
+        // }
+        // if (currentFile.size > (2 * 1024 * 1024)) {
+        //     target.value = ""
+        //     setMessage(`Your file is oversize`)
+        //     callback(null)
+        //     return;
+        // }
+        // callback(currentFile)
     }
 
     return (

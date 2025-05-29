@@ -7,22 +7,18 @@ import { BASE_IMAGE_GAME } from "../../../global";
 import { IGame } from "@/app/types";
 import { useEffect, useState } from "react";
 import { getCookie } from "@/lib/client-cookie";
-import { getUserFromToken } from "@/lib/jwt";
+// import { getUserFromToken } from "@/lib/jwt";/
 
 export default function GameCard({ game }: { game: IGame }) {
     const { addToCart } = useCart();
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [ownedGameIds, setOwnedGameIds] = useState<number[]>([]);
+    // const [, setOwnedGameIds] = useState<number[]>([]);
 
     useEffect(() => {
         const token = getCookie("token");
         setIsLoggedIn(!!token);
-        if (token) {
-            const user = getUserFromToken(token);
-            setOwnedGameIds(user?.ownedGameIds || []);
-        }
     }, []);
 
     const handleAddToCart = async () => {

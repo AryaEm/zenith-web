@@ -16,10 +16,10 @@ export interface IGame {
     updatedAt: string
 }
 
-interface GameCardProps {
-    game: IGame
-    isLoggedIn: boolean
-}
+// interface GameCardProps {
+//     game: IGame
+//     isLoggedIn: boolean
+// }
 
 export interface ICartGameItem {
     id: number
