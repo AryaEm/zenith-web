@@ -1,8 +1,8 @@
 "use client"
 
 import React from "react";
-import { useState } from "react";
-import { AlertWarning } from "../alert";
+// import { useState } from "react";
+// import { AlertWarning } from "../alert";
 
 type Props = {
     disabled?: boolean,
@@ -15,7 +15,7 @@ type Props = {
     maxSize?: number
 }
 
-const FileInput = (props: Props) => {
+const FileInput = () => {
     // const [message, setMessage] = useState("")
     // // const limitSize = props.maxSize || 2048
     // const acceptTypes = props.acceptTypes.join()

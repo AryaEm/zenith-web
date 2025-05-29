@@ -23,7 +23,7 @@ export const get = async <T>(url: string, token?: string): Promise<ApiResponse<T
             data: response.data?.data ?? [],
         };
     } catch (error) {
-        const err = error as AxiosError<any>;
+        const err = error as AxiosError<{ message: string }>;
         const errorMessage = err.response?.data?.message || "Unknown error";
 
         return {
