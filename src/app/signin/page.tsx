@@ -11,6 +11,7 @@ import { FaLock } from "react-icons/fa6";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { FaUserNinja } from "react-icons/fa";
+import Link from "next/link"
 
 const SignInPage = () => {
     const [username, setUsername] = useState<string>("")
@@ -71,7 +72,7 @@ const SignInPage = () => {
                                 </span>
                                 <h4 className="text-3xl font-semibold text-white mb-2 sfprodisplay my-3 tracking-wider">Create new account<span className="text-[#007AFF]">.</span></h4>
                                 <span className="text-sm text-white text-opacity-70 font-normal text-center flex gap-1">
-                                    Already have an account? <p className="font-bold cursor-pointer text-[#007AFF]" >Login</p>
+                                    Already have an account? <Link href={"/login"}><p className="font-bold cursor-pointer text-[#007AFF]" >Login</p></Link>
                                 </span>
                             </div>
 

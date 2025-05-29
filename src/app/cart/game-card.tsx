@@ -1,31 +1,44 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import { useCart } from "@/app/cart/cart-context"
-import { useRouter } from "next/navigation"
-import { BASE_IMAGE_GAME } from "../../../global"
-import { IGame } from "@/app/types"
-import { useEffect, useState } from "react"
-import { getCookie } from "@/lib/client-cookie"
+import Image from "next/image";
+import { useCart } from "@/app/cart/cart-context";
+import { useRouter } from "next/navigation";
+import { BASE_IMAGE_GAME } from "../../../global";
+import { IGame } from "@/app/types";
+import { useEffect, useState } from "react";
+import { getCookie } from "@/lib/client-cookie";
+import { getUserFromToken } from "@/lib/jwt";
 
 export default function GameCard({ game }: { game: IGame }) {
-    const { addToCart } = useCart()
-    const router = useRouter()
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [showModal, setShowModal] = useState(false)
+    const { addToCart } = useCart();
+    const router = useRouter();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [ownedGameIds, setOwnedGameIds] = useState<number[]>([]);
 
     useEffect(() => {
-        const token = getCookie("token")
-        setIsLoggedIn(!!token)
-    }, [])
+        const token = getCookie("token");
+        setIsLoggedIn(!!token);
+        if (token) {
+            const user = getUserFromToken(token);
+            setOwnedGameIds(user?.ownedGameIds || []);
+        }
+    }, []);
 
-    const handleClick = (item:IGame) => {
+    const handleAddToCart = async () => {
+        console.log("Klik game:", game);
+
         if (!isLoggedIn) {
-            setShowModal(true)
-            return
+            setShowModal(true);
+            return;
         }
 
-        addToCart({
+        if (ownedGameIds.includes(game.id)) {
+            alert("Game ini sudah kamu beli!");
+            return;
+        }
+
+        const success = addToCart({
             id: game.id,
             uuid: game.uuid,
             name: game.name,
@@ -34,20 +47,30 @@ export default function GameCard({ game }: { game: IGame }) {
             gambar: game.gambar,
             deskripsi: game.deskripsi,
             quantity: 1,
-        })
-        router.push("/cart")
-    }
+        });
+
+        console.log("addToCart result:", success);
+
+        if (!success) {
+            alert("Game sudah ada di cart.");
+            return;
+        }
+
+        // Tunggu sejenak agar state & cookie sempat tersimpan
+        setTimeout(() => {
+            router.push("/cart");
+        }, 200); // 200ms delay
+    };
 
     const handleLoginRedirect = () => {
-        setShowModal(false)
-        router.push("/login")
-    }
+        setShowModal(false);
+        router.push("/login");
+    };
 
     return (
         <>
             <div
-                onClick={() => handleClick(game)}
-                className="w-full h-36 bg-white gamelistshadow bg-opacity-10 backdrop-blur-md rounded-xl flex items-center cursor-pointer border border-blue-500 sfprodisplay"
+                className="w-full h-36 bg-white gamelistshadow bg-opacity-10 backdrop-blur-md rounded-xl flex items-center border border-blue-500 sfprodisplay"
             >
                 <div className="w-1/4 h-full rounded-xl bg-[#007AFF]">
                     <Image
@@ -77,6 +100,12 @@ export default function GameCard({ game }: { game: IGame }) {
                                 day: "numeric",
                             })}
                         </p>
+                        <button
+                            onClick={handleAddToCart}
+                            className="mt-2 px-3 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm"
+                        >
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
@@ -104,5 +133,5 @@ export default function GameCard({ game }: { game: IGame }) {
                 </div>
             )}
         </>
-    )
+    );
 }

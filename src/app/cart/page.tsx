@@ -1,27 +1,114 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCart } from "./cart-context";
-import Image from "next/image";
+import { getCookie } from "@/lib/client-cookie";
+import { getUserFromToken } from "@/lib/jwt";
 import { BASE_IMAGE_GAME } from "../../../global";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import emptCart from "../../../public/apaya/Untitled design (18).svg"
-// import { IoIosArrowBack } from "react-icons/io";
-import { IoCloseCircle } from "react-icons/io5";
 import Link from "next/link";
+import { IoCloseCircle } from "react-icons/io5";
+import emptCart from "../../../public/apaya/Untitled design (18).svg";
+// import { post } from "@/lib/api-bridge";
+import { toast } from "react-toastify";
+import { BASE_API_URL } from "../../../global";
 
 export default function CartPage() {
   const { cart, removeFromCart, resetCart } = useCart();
   const router = useRouter();
+  const [userName, setUserName] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("QRIS");
+  const [loadingPurchase, setLoadingPurchase] = useState(false);
 
-  const handleRemoveFromCart = (itemId: number) => {
-    removeFromCart(itemId);
+  useEffect(() => {
+    // Ambil user hanya sekali, bukan tiap render
+    const token = getCookie("token");
+    if (!token) {
+      setUserName(""); // Optional: redirect to login if needed
+      return;
+    }
+    const user = getUserFromToken(token);
+    if (user) setUserName(user.username);
+  }, []);
+
+  const getTotalPrice = () =>
+    cart.reduce((total, item) => total + item.harga * item.quantity, 0);
+
+  const handlePurchase = async () => {
+    const token = getCookie("token");
+    if (!token) {
+      toast("Login dulu ya!", {
+        hideProgressBar: true,
+        type: "warning",
+        containerId: "toastPurchase",
+      });
+      router.push("/login");
+      return;
+    }
+
+    if (cart.length === 0) {
+      toast("Keranjang kosong.", {
+        hideProgressBar: true,
+        type: "warning",
+        containerId: "toastPurchase",
+      });
+      return;
+    }
+
+    try {
+      setLoadingPurchase(true);
+
+      const payload = {
+        metode_pembayaran: paymentMethod,
+        status: "Lunas",
+        detail_transaksi: cart.map(item => ({ gameId: item.id })),
+      };
+
+      console.log("Purchase Payload:", payload);
+
+      const response = await fetch(`${BASE_API_URL}/transaksi`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      console.log("Response from /order:", data);
+
+      if (data?.status) {
+        toast(data.message || "Pembelian berhasil!", {
+          hideProgressBar: true,
+          type: "success",
+          containerId: "toastPurchase",
+        });
+
+        resetCart();
+
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
+      } else {
+        toast(data.message || "Gagal memproses pembelian.", {
+          hideProgressBar: true,
+          type: "warning",
+          containerId: "toastPurchase",
+        });
+      }
+    } catch (error) {
+      console.error("Purchase error:", error);
+      toast("Terjadi kesalahan sistem.", {
+        hideProgressBar: true,
+        type: "error",
+        containerId: "toastPurchase",
+      });
+    } finally {
+      setLoadingPurchase(false);
+    }
   };
-
-  const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + item.harga * item.quantity, 0);
-  };
-
-  const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   if (cart.length === 0) {
     return (
@@ -43,20 +130,21 @@ export default function CartPage() {
       <Link href="/">
         <h1 className="text-2xl font-bold mb-6">ZENITH / <span className="text-white/60">checkout</span></h1>
       </Link>
+
       <div className="flex gap-12 items-center justify-center h-[80vh] absolute w-[92%] left-1/2 -translate-x-1/2">
-        {/* Order Summary */}
-        <div className="w-1/2 ">
+        {/* Bagian Kiri */}
+        <div className="w-1/2">
           <h2 className="text-2xl sfprodisplay font-semibold mb-4">Order Summary</h2>
           <div className="space-y-4">
-            {cart.map((item) => (
-              <div key={item.id} className="flex items-center h-[12vh] justify-between bg-[#212430] border rounded border-[#454757] relative">
+            {cart.map(item => (
+              <div key={item.id} className="flex items-center justify-between bg-[#212430] border rounded border-[#454757] relative h-[14vh]">
                 <div className="flex items-center gap-4">
                   <Image
                     src={`${BASE_IMAGE_GAME}/${item.gambar}`}
                     alt={item.name}
                     width={200}
                     height={100}
-                    className="rounded-lg h-[12vh] object-cover relative -left-1"
+                    className="rounded-lg h-full object-cover"
                   />
                   <div>
                     <p className="text-lg font-medium sfprodisplay">{item.name}</p>
@@ -67,25 +155,21 @@ export default function CartPage() {
                   <p className="text-lg text-zinc-200 font-normal mr-8">
                     {item.harga > 0 ? `Rp ${item.harga.toLocaleString("id-ID")}` : "Free"}
                   </p>
-                  <button onClick={() => handleRemoveFromCart(item.id)} className="absolute -right-2 -top-2">
+                  <button onClick={() => removeFromCart(item.id)} className="absolute -right-2 -top-2">
                     <IoCloseCircle className="text-2xl text-red-500 hover:text-red-700" />
                   </button>
                 </div>
               </div>
             ))}
-            <div className="mt-4 p-4 bg-white/5 rounded-xl font-medium tracking-wide sfprodisplay text-zinc-400 custom-shadow1">
-              Quantity: {totalQuantity} item{totalQuantity > 1 && "s"}
-            </div>
           </div>
         </div>
 
-        {/* Payment */}
-        <div className="w-1/2 ">
-          <h2 className="text-2xl sfprodisplay font-semibold mb-4">Payment</h2>
-          <div className="bg-[#212430] p-4 rounded-xl mb-4 custom-shadow1">
-            <p className="text-md sfprodisplay text-zinc-300 font-normal tracking-wide">nama customer</p>
+        {/* Bagian Kanan */}
+        <div className="w-1/2 space-y-4">
+          <div className="bg-[#212430] p-4 rounded-xl custom-shadow1">
+            <p className="text-md text-zinc-300">Nama Customer: {userName}</p>
           </div>
-          <div className="space-y-4 p-6 rounded-xl bg-[#212430] custom-shadow1 sfprodisplay text-zinc-200 tracking-wide">
+          <div className="space-y-4 p-6 rounded-xl bg-[#212430] custom-shadow1 text-zinc-200">
             <div className="flex justify-between text-sm border-t border-white/10 pt-4">
               <span>Subtotal:</span>
               <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>
@@ -95,19 +179,21 @@ export default function CartPage() {
               <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>
             </div>
             <div className="flex items-center justify-between">
-              <div className=" flex gap-3 items-center">
+              <div className="flex gap-3 items-center">
                 <label htmlFor="payment-method">Payment method:</label>
                 <select
                   id="payment-method"
                   className="px-3 py-1 bg-white/10 rounded text-white outline-none"
+                  value={paymentMethod}
+                  onChange={e => setPaymentMethod(e.target.value)}
                 >
-                  <option value="qris" className="text-white font-medium bg-zinc-400">QRIS</option>
-                  <option value="gopay" className="text-white font-medium bg-zinc-400">GoPay</option>
-                  <option value="dana" className="text-white font-medium bg-zinc-400">DANA</option>
+                  <option value="QRIS">QRIS</option>
+                  <option value="GoPay">GoPay</option>
+                  <option value="DANA">DANA</option>
                 </select>
               </div>
               <button
-                onClick={() => alert("Coming Soon!")}
+                onClick={handlePurchase}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white"
               >
                 Purchase

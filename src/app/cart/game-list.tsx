@@ -10,7 +10,7 @@ const getGame = async (search: string): Promise<IGame[]> => {
     try {
         const TOKEN = await getCookies("token") || ""
         // const url = `${BASE_API_URL}/game?search=${search}`
-        const url = `${BASE_API_URL}/game/quick-access?search=${search}`
+        const url = `${BASE_API_URL}/game/games?search=${search}`
         const { data } = await get(url, TOKEN)
         return data?.status ? data.data : []
     } catch (error) {

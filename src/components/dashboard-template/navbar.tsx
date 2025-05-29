@@ -35,7 +35,6 @@ export default function Navbar({ children, menuList }: ManagerProp) {
         removeCookie("role")
         removeCookie("no_telp")
         removeCookie("profile_picture")
-        removeCookie("cart")
         setIsLoggedIn(false);
     };
 
