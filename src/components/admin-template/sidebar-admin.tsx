@@ -105,9 +105,11 @@ export default function SidebarAdmin() {
 
 
                 <div className="p-4 pb-14">
-                    <button className="w-full py-2 px-4 bg-biru hover:bg-blue-700 rounded text-white">
-                        Upload Game
-                    </button>
+                    <Link href={"/admin/game"}>
+                        <button className="w-full py-2 px-4 bg-biru hover:bg-blue-700 rounded text-white">
+                            Games
+                        </button>
+                    </Link>
                 </div>
             </div>
         </>

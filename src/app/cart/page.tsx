@@ -170,10 +170,10 @@ export default function CartPage() {
             <p className="text-md text-zinc-300">Nama Customer: {userName}</p>
           </div>
           <div className="space-y-4 p-6 rounded-xl bg-[#212430] custom-shadow1 text-zinc-200">
-            <div className="flex justify-between text-sm border-t border-white/10 pt-4">
+            {/* <div className="flex justify-between text-sm border-t border-white/10 pt-4">
               <span>Subtotal:</span>
               <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>
-            </div>
+            </div> */}
             <div className="flex justify-between text-sm border-b border-white/10 pb-4">
               <span>Total:</span>
               <span>Rp {getTotalPrice().toLocaleString("id-ID")}</span>

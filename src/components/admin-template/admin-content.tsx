@@ -1,7 +1,11 @@
-"use client"
+"use client";
 
+import { useEffect, useState } from "react";
 import WelcomeAdmin from "./welcome-admin";
 import { FiArrowDownLeft, FiArrowUpRight } from "react-icons/fi";
+import { BASE_API_URL } from "../../../global";
+import { get } from "@/lib/api-bridge";
+import { getCookie } from "@/lib/client-cookie";
 import { FaDollarSign } from "react-icons/fa6";
 import { Line } from "react-chartjs-2";
 import {
@@ -17,12 +21,59 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
+type GameSalesStat = {
+    totalThisMonth: number;
+    totalLastMonth: number;
+    percentChange: number;
+    message: string;
+};
+
+// ✅ Pindahkan function keluar dari komponen
+const getGameSalesStatThisMonth = async (): Promise<GameSalesStat | null> => {
+    try {
+        const TOKEN = await getCookie("token");
+        const url = `${BASE_API_URL}/game/monthly-purchase`;
+
+        const { status, data } = await get<GameSalesStat>(url, TOKEN);
+
+        if (status && data) return data;
+        return null;
+    } catch (err) {
+        console.error("Error fetching game sales stat:", err);
+        return null;
+    }
+};
+
 export default function AdminContent() {
+    const [monthlyStat, setMonthlyStat] = useState<GameSalesStat | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const stat = await getGameSalesStatThisMonth();
+            if (stat) {
+                setMonthlyStat(stat);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const viewsCards = [
-        { title: "Downloads this Month", value: "50.8K", change: "+28.46%", changeType: "positive" },
+        {
+            title: "Purchased This Month",
+            value: monthlyStat ? monthlyStat.totalThisMonth.toString() : "-",
+            change: monthlyStat
+                ? `${monthlyStat.percentChange > 0 ? "+" : ""}${monthlyStat.percentChange.toFixed(2)}%`
+                : "-",
+            changeType: monthlyStat ? (monthlyStat.percentChange >= 0 ? "positive" : "negative") : "positive",
+        },
+        {
+            title: "Purchased last Month", value: monthlyStat ? monthlyStat.totalLastMonth.toString() : "-",
+            change: "",
+            changeType: "neutral",
+        },
         { title: "Monthly Users", value: "23.6K", change: "-12.6%", changeType: "negative" },
         { title: "New Sign Ups", value: "756", change: "+3.1%", changeType: "positive" },
-        { title: "gatau apa", value: "0", change: "+100%", changeType: "positive" },
     ];
 
     const data = {
@@ -62,7 +113,7 @@ export default function AdminContent() {
             },
             tooltip: {
                 callbacks: {
-                    label: (context: TooltipItem<'line'>) => {
+                    label: (context: TooltipItem<"line">) => {
                         return `$${context.raw?.toLocaleString()} (${context.dataset.label})`;
                     },
                 },
@@ -84,7 +135,7 @@ export default function AdminContent() {
                         if (typeof tickValue === "number") {
                             return `$${tickValue / 1000}K`;
                         }
-                        return tickValue; // Fallback untuk string
+                        return tickValue;
                     },
                 },
                 grid: {
@@ -96,43 +147,47 @@ export default function AdminContent() {
     };
 
     return (
-        <>
-            <div className="h-dvh w-4/5 py-8 px-12 relative">
-                <WelcomeAdmin></WelcomeAdmin>
+        <div className="h-dvh w-4/5 py-8 px-12 relative">
+            <WelcomeAdmin />
 
-                <div className="h-fit w-full grid grid-cols-1 md:grid-cols-4 gap-6 mt-2 mb-5">
-                    {viewsCards.map((card, index) => (
-                        <div
-                            key={index}
-                            className="bg-[#212430] text-white p-4 rounded-lg shadow-md border border-[#343B4F]"
-                        >
-                            <div className="text-sm font-medium text-[#AEB9E1] sfprodisplay">{card.title}</div>
-                            <div className="w-full flex items-center gap-4 py-1">
-                                <div className="text-2xl font-bold">{card.value}</div>
-                                <div
-                                    className={`text-sm flex items-center gap-1 font-medium px-2 py-[0.10rem] border border-opacity-20 rounded-md ${card.changeType === "positive" ? "text-[#14CA74] border-[#05C168] bg-[#05C168] bg-opacity-20" : "text-[#FF5A65] border-[#FF5A65] bg-[#FF5A65] bg-opacity-20"
-                                        }`}
-                                >
-                                    {card.change}
-                                    <FiArrowDownLeft className={`${card.changeType === "positive" ? "hidden" : "block"}`} />
-                                    <FiArrowUpRight className={`${card.changeType === "positive" ? "block" : "hidden"}`} />
-                                </div>
+            <div className="h-fit w-full grid grid-cols-1 md:grid-cols-4 gap-6 mt-2 mb-5">
+                {viewsCards.map((card, index) => (
+                    <div
+                        key={index}
+                        className="bg-[#212430] text-white p-4 rounded-lg shadow-md border border-[#343B4F]"
+                    >
+                        <div className="text-sm font-medium text-[#AEB9E1] sfprodisplay">{card.title}</div>
+                        <div className="w-full flex items-center gap-4 py-1">
+                            <div className="text-2xl font-bold">{card.value}</div>
+                            <div
+                                className={`text-sm flex items-center gap-1 font-medium px-2 py-[0.10rem] border border-opacity-20 rounded-md ${card.changeType === "positive"
+                                    ? "text-[#14CA74] border-[#05C168] bg-[#05C168] bg-opacity-20"
+                                    : "text-[#FF5A65] border-[#FF5A65] bg-[#FF5A65] bg-opacity-20"
+                                    }`}
+                            >
+                                {card.change}
+                                <FiArrowDownLeft className={`${card.changeType === "positive" ? "hidden" : "block"}`} />
+                                <FiArrowUpRight className={`${card.changeType === "positive" ? "block" : "hidden"}`} />
                             </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
 
-                <div className="bg-[#212430] w-full h-[72%] border border-[#343B4F] rounded-lg p-6">
-                    <h3 className="text-[#AEB9E1] text-sm font-semibold mb-2">Total Revenue</h3>
-                    <div className="flex gap-4 sfprodisplay items-center">
-                        <p className="text-white text-xl font-semibold flex items-center"><FaDollarSign className="text-2xl"></FaDollarSign> 240.8K</p>
-                        <p className="text-[#14CA74] bg-[#05C168] bg-opacity-20 border-[#05C168] border-opacity-20 border px-2 py-[0.10rem] rounded-md text-sm flex gap-1 items-center">+24.6% <FiArrowUpRight></FiArrowUpRight></p>
-                    </div>
-                    <div className="h-[85%]">
-                        <Line data={data} options={options} />
-                    </div>
+            <div className="bg-[#212430] w-full h-[72%] border border-[#343B4F] rounded-lg p-6">
+                <h3 className="text-[#AEB9E1] text-sm font-semibold mb-2">Total Revenue</h3>
+                <div className="flex gap-4 sfprodisplay items-center">
+                    <p className="text-white text-xl font-semibold flex items-center">
+                        <FaDollarSign className="text-2xl" /> 240.8K
+                    </p>
+                    <p className="text-[#14CA74] bg-[#05C168] bg-opacity-20 border-[#05C168] border-opacity-20 border px-2 py-[0.10rem] rounded-md text-sm flex gap-1 items-center">
+                        +24.6% <FiArrowUpRight />
+                    </p>
+                </div>
+                <div className="h-[85%]">
+                    <Line data={data} options={options} />
                 </div>
             </div>
-        </>
-    )
+        </div>
+    );
 }

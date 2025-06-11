@@ -3,15 +3,15 @@ export interface IGame {
     uuid: string,
     name: string,
     gambar: string,
-    video: string,
-    developer: string,
+    video?: string,
+    developer?: string,
     harga: number,
-    deskripsi: string,
-    total_dibeli: number,
+    deskripsi: string
+    total_dibeli?: number,
     genre: string,
-    isOwned?: boolean,
-    tahun_rilis: string,
-    download_link: string,
+    isOwned?: string,
+    tahun_rilis?: string,
+    download_link?: string,
     createdAt: string,
     updatedAt: string
 }

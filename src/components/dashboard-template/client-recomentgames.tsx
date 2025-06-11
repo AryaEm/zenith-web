@@ -25,7 +25,8 @@ export default function ClientGameCard({ game }: Props) {
         if (!isLoggedIn) {
             setShowModal(true)
         } else {
-            window.location.href = `/game/${game.id}` // atau router.push
+            alert("scam yahahahaha");
+            return
         }
     }
 

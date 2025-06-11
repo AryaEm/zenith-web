@@ -40,7 +40,7 @@ export default function HeroSect() {
                         <div className="w-[400px] h-[400px] rounded-full absolute">
                             <Image src={Profil} alt="main profil" className="rounded-full" />
                         </div>
-                        <div className="w-40 h-[70px] border rounded-2xl bg-white top-14 -left-14 absolute border-[#007AFF] custom-shadow">
+                        <div className="w-40 h-[70px] border rounded-2xl bg-slate-300 top-14 -left-14 absolute border-[#007AFF] custom-shadow">
                             <div className="flex h-full">
                                 <div className="h-full w-[40%] flex items-center justify-center">
                                     <div className="h-10 w-10 bg-[#007AFF] rounded-xl flex items-center justify-center">
@@ -53,7 +53,7 @@ export default function HeroSect() {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-40 h-[70px] border rounded-2xl bg-white bottom-4 right-8 absolute border-[#007AFF] custom-shadow">
+                        <div className="w-40 h-[70px] border rounded-2xl bg-slate-300 bottom-4 right-8 absolute border-[#007AFF] custom-shadow">
                             <div className="flex h-full">
                                 <div className="h-full w-[40%] flex items-center justify-center">
                                     <div className="h-10 w-10 bg-[#007AFF] rounded-xl flex items-center justify-center">

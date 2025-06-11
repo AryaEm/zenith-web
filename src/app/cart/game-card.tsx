@@ -25,15 +25,14 @@ export default function GameCard({ game }: { game: IGame }) {
         console.log("Klik game:", game);
 
         if (!isLoggedIn) {
-            setShowModal(true);
+            setShowModal(true); // Munculkan modal login
             return;
         }
 
         if (game.isOwned) {
-            alert("Game ini sudah kamu beli!");
+            alert("scam yahahahaha");
             return;
         }
-
 
         const success = addToCart({
             id: game.id,
@@ -89,30 +88,34 @@ export default function GameCard({ game }: { game: IGame }) {
 
                         {(!isLoggedIn || !game.isOwned) && (
                             <div>
-                                <p className="w-full text-lg font-semibold text-white">{game.harga > 0 ? `Rp ${game.harga.toLocaleString()}` : 'Gratis'}</p>
-                                <p className="w-full text-sm text-white text-opacity-60"> {new Date(game.tahun_rilis).toLocaleDateString('id-ID', {
+                                <p className="w-full text-lg font-semibold text-white">{game.harga > 0 ? `Rp ${game.harga.toLocaleString()}` : 'Free'}</p>
+                                {/* <p className="w-full text-sm text-white text-opacity-60"> {new Date(game.tahun_rilis).toLocaleDateString('id-ID', {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
-                                })}</p>
+                                })}</p> */}
                             </div>
                         )}
 
-                        {isLoggedIn ? (
-
-                            game.isOwned ? (
-                                <button className="mt-2 px-8 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-md font-medium tracking-wide absolute bottom-4">Play</button>
-                            ) : (
-                                <button className="mt-2 px-3 py-1 rounded border-2 border-blue-500 hover:border-blue-600 transition-all duration-300 text-white text-md font-medium absolute bottom-4" onClick={handleAddToCart}>Add to Cart</button>
-                            )
+                        {game.isOwned ? (
+                            <button
+                                className="mt-2 px-10 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white text-md font-medium tracking-wide absolute bottom-4"
+                                onClick={() => alert("scam yahahahaha")}
+                            >
+                                Play
+                            </button>
                         ) : (
-                            <button className="cursor-not-allowed mt-2 px-3 py-1 rounded bg-red-500 hover:bg-red-600 transition-all duration-300 text-white text-md font-medium absolute bottom-4" disabled>LogIn untuk membeli</button>
+                            <button
+                                className="mt-2 px-8 py-1 rounded border-2 border-blue-500 hover:border-blue-600 transition-all duration-300 text-white text-md font-medium absolute bottom-4"
+                                onClick={handleAddToCart}
+                            >
+                                Add to Cart
+                            </button>
                         )}
-
 
                     </div>
                 </div>
-            </div>
+            </div >
 
             {showModal && (
                 <div className="fixed inset-0 z-[9999] bg-black bg-opacity-50 flex justify-center items-center">
@@ -135,7 +138,8 @@ export default function GameCard({ game }: { game: IGame }) {
                         </div>
                     </div>
                 </div>
-            )}
+            )
+            }
         </>
     );
 }
