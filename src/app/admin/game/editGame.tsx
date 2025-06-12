@@ -100,7 +100,7 @@ const EditGame = ({ selectedGame }: { selectedGame: IGame }) => {
 
 
                     {/* modal body */}
-                    <div className="p-5">
+                    <div className="p-5 text-black">
                         <InputGroupComponent id={`name`} type="text" value={game.name}
                             onChange={val => setGame({ ...game, name: val })}
                             required={true} placeholder="game Name" />

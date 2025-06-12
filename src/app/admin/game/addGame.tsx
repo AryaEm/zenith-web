@@ -10,7 +10,7 @@ import { toast } from "react-toastify"
 import { ButtonSuccesOutline, ButtonSuccess, ButtonDanger } from "@/components/button"
 import { InputGroupComponent } from "@/components/InputComponent"
 import Modal from "@/components/Modal"
-import Select from "@/components/Select"
+// import Select from "@/components/Select"
 import FileInput from "@/components/FileInput"
 import { useRouter } from "next/navigation"
 

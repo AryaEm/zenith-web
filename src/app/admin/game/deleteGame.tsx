@@ -78,7 +78,7 @@ export default function DeleteGame({ selectedGame }: { selectedGame: IGame }) {
 
 
                     {/* modal body */}
-                    <div className="p-5">
+                    <div className="p-5 text-black">
                         Are you sure you want to delete this game {game.name}?
                     </div>
                     {/* end modal body */}

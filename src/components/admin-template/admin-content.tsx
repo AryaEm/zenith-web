@@ -28,10 +28,9 @@ type GameSalesStat = {
     message: string;
 };
 
-// ✅ Pindahkan function keluar dari komponen
 const getGameSalesStatThisMonth = async (): Promise<GameSalesStat | null> => {
     try {
-        const TOKEN = await getCookie("token");
+        const TOKEN = getCookie("token");
         const url = `${BASE_API_URL}/game/monthly-purchase`;
 
         const { status, data } = await get<GameSalesStat>(url, TOKEN);
@@ -69,11 +68,11 @@ export default function AdminContent() {
         },
         {
             title: "Purchased last Month", value: monthlyStat ? monthlyStat.totalLastMonth.toString() : "-",
-            change: "",
-            changeType: "neutral",
+            change: "0",
+            changeType: "positive",
         },
-        { title: "Monthly Users", value: "23.6K", change: "-12.6%", changeType: "negative" },
-        { title: "New Sign Ups", value: "756", change: "+3.1%", changeType: "positive" },
+        { title: "All Users", value: "-", change: "-", changeType: "positive" },
+        { title: "New Users", value: "18", change: "+3.1%", changeType: "positive" },
     ];
 
     const data = {
@@ -88,16 +87,16 @@ export default function AdminContent() {
                 pointRadius: 1,
                 pointHoverRadius: 6,
             },
-            {
-                label: "Expenses",
-                data: [50000, 80000, 35000, 120000, 90000, 100000, 190000, 200000, 140000, 100000, 112000, 150000],
-                borderColor: "#38BDF8",
-                backgroundColor: "rgba(56, 189, 248, 0.1)",
-                tension: 0.4,
-                pointRadius: 1,
-                pointHoverRadius: 6,
-                fill: true,
-            },
+            // {
+            //     label: "Expenses",
+            //     data: [50000, 80000, 35000, 120000, 90000, 100000, 190000, 200000, 140000, 100000, 112000, 150000],
+            //     borderColor: "#38BDF8",
+            //     backgroundColor: "rgba(56, 189, 248, 0.1)",
+            //     tension: 0.4,
+            //     pointRadius: 1,
+            //     pointHoverRadius: 6,
+            //     fill: true,
+            // },
         ],
     };
 

@@ -13,7 +13,9 @@ const getGame = async (search: string): Promise<IGame[]> => {
     try {
         const TOKEN = await getCookies("token") || ""
         const url = `${BASE_API_URL}/game?search=${search}`
-        const { status, data } = await get<IGame[]>(url, TOKEN); // << Tambahkan generic di sini
+        const response = await get<IGame[]>(url, TOKEN)
+        // console.log("API GAME response:", response)
+        const { status, data } = response
         return status ? data ?? [] : [];
     } catch (error) {
         console.log(error)
@@ -21,23 +23,24 @@ const getGame = async (search: string): Promise<IGame[]> => {
     }
 }
 
-const MenuPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const GamePage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     const search = searchParams.search ? searchParams.search.toString() : ``
-    const game: IGame[] = await getGame(search)
-    console.log("game result:", game); //  Tambahkan di sini
+    const game: IGame[] = await
+        getGame(search)
+    // console.log("game result:", game); 
 
     return (
-        <div className="min-h-dvh primary flex justify-center pt-32 pb-10">
-            <div className="w-3/4 h-fit">
+        <div className="min-h-dvh primary flex justify-center pt-28 pb-10">
+            <div className="w-3/4 h-fit ">
 
-                <h4 className="text-7xl text-white font-bold mb-2">Menus</h4>
+                <h4 className="text-7xl text-white font-bold mb-2">Games</h4>
                 <p className="text-sm text-secondary my-4 text-white text-opacity-60">
-                    This page displays menu data, allowing menus to view details,
-                    search, and manage menu items by adding, editing, or deleting them.
+                    This page displays game data, allowing games to view details,
+                    search, and manage game items by adding, editing, or deleting them.
                 </p>
                 <div className="flex items-center my-12 ">
                     <div className="flex w-full max-w-md flex-grow h-10">
-                        <Search url={`/manager/menu`} search={search} />
+                        <Search url={`/admin/game`} search={search} />
                     </div>
 
                     <div className="ml-5">
@@ -52,34 +55,43 @@ const MenuPage = async ({ searchParams }: { searchParams: { [key: string]: strin
                         </AlertInfo>
                         :
                         <>
-                            <div className="w-full flex flex-wrap justify-center gap-12">
+                            <div className="w-full flex flex-wrap gap-6 justify-start">
                                 {game.map((data, index) => (
-                                    <div key={`keyPrestasi${index}`} className={`flex w-full h-80 cursor-pointer`}>
-                                        <div className="h-80 w-[45%] bg-[#323444] overflow-hidden flex items-end justify-center rounded-xl border-l-4 border-teal-500">
-                                            <Image width={40} height={40} src={`${BASE_IMAGE_GAME}/${data.gambar}`} className="w-3/4 h-3/4 rounded object-cover" alt="preview" unoptimized />
+                                    <div
+                                        key={`keyGameCard${index}`}
+                                        className="w-64 bg-[#1f2028] rounded-xl overflow-hidden shadow-md hover:shadow-teal-500/40 transition-shadow duration-300 flex-shrink-0"
+                                    >
+                                        <div className="w-full h-40 bg-[#323444] flex items-center justify-center">
+                                            <Image
+                                                width={256}
+                                                height={160}
+                                                src={`${BASE_IMAGE_GAME}/${data.gambar}`}
+                                                className="w-full h-full object-cover"
+                                                alt="preview"
+                                                unoptimized
+                                            />
                                         </div>
-
-                                        <div className="w-[60%] h-full sfprodisplay relative">
-                                            <div className="text-white text-opacity-60 pl-6 pt-10">
-                                                {data.genre}
+                                        <div className="p-4 text-white flex flex-col justify-between h-48">
+                                            <div>
+                                                <div className="text-teal-400 text-sm mb-1">
+                                                    {data.genre.length > 28 ? data.genre.slice(0, 28) + '...' : data.genre}
+                                                </div>
+                                                <div className="text-lg font-semibold mb-2 line-clamp-2">{data.name}</div>
+                                                <p className="text-sm text-gray-300 line-clamp-3">{data.deskripsi}</p>
                                             </div>
-                                            <div className="text-white pl-6 text-3xl tracking-wide py-3 font-semibold">
-                                                {data.name}
-                                            </div>
-                                            <div className="text-white text-opacity-70 text-sm tracking-wide pt-2 w-full pl-6 flex justify-between">
-                                                <p className="w-3/4">{data.deskripsi}</p>
-                                                <p className="text-xl">Rp {data.harga}</p>
-                                            </div>
-                                            <div className="w-fit pl-6 flex gap-3 absolute bottom-0">
-                                                <DeleteGame selectedGame={data} />
-                                                <EditGame selectedGame={data} />
+                                            <div className="mt-4 flex justify-between items-center">
+                                                <span className="text-base font-medium">Rp {data.harga}</span>
+                                                <div className="flex gap-2">
+                                                    <DeleteGame selectedGame={data} />
+                                                    <EditGame selectedGame={data} />
+                                                </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 ))}
-
                             </div>
+
+
                         </>
                 }
 
@@ -87,4 +99,4 @@ const MenuPage = async ({ searchParams }: { searchParams: { [key: string]: strin
         </div>
     )
 }
-export default MenuPage
+export default GamePage
